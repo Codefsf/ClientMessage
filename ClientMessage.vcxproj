@@ -152,6 +152,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ClientMessage.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ThreadLocal.cpp" />
+    <ClCompile Include="ThreadManage.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Thread.h" />
+    <ClInclude Include="ThreadLocal.h" />
+    <ClInclude Include="ThreadManage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
