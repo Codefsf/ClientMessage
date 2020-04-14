@@ -46,19 +46,6 @@ public:
 	static bool PostTask(const StdClosure &task);
 	static bool PostTask(int identifier, const StdClosure &task);
 
-	static bool PostDelayedTask(const StdClosure &task, TimeDelta delay);
-	static bool PostDelayedTask(int identifier, const StdClosure &task, TimeDelta delay);
-
-	static const int TIMES_FOREVER = -1;
-	static void PostRepeatedTask(const WeakCallback<StdClosure>& task, const TimeDelta& delay, int times = TIMES_FOREVER);
-	static void PostRepeatedTask(int thread_id, const WeakCallback<StdClosure>& task, const TimeDelta& delay, int times = TIMES_FOREVER);
-
-	static bool PostNonNestableTask(const StdClosure &task);
-	static bool PostNonNestableTask(int identifier, const StdClosure &task);
-
-	static bool PostNonNestableDelayedTask(const StdClosure &task, TimeDelta delay);
-	static bool PostNonNestableDelayedTask(int identifier, const StdClosure &task, TimeDelta delay);
-
 	template<typename T1, typename T2>
 	static bool Await(int identifier, const std::function<T1> &task, const std::function<T2> &reply)
 	{
@@ -69,9 +56,5 @@ public:
 		message_loop->PostTaskAndReply(task, reply);
 		return true;
 	}
-
-private:
-	static void RunRepeatedly(const WeakCallback<StdClosure>& task, const TimeDelta& delay, int times);
-	static void RunRepeatedly2(int thread_id, const WeakCallback<StdClosure>& task, const TimeDelta& delay, int times);
 };
 
