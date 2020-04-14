@@ -30,6 +30,15 @@
     <ClCompile Include="FrameworkThread.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MessageLoop.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MessagePump.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMessagePump.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Thread.h">
@@ -45,6 +54,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Callback.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageLoop.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MessagePump.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMessagePump.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
