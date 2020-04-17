@@ -39,6 +39,12 @@
     <ClCompile Include="ProcessMessagePump.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MessageLoopProxy.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="lock_win.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Thread.h">
@@ -64,6 +70,12 @@
     </ClInclude>
     <ClInclude Include="ProcessMessagePump.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageLoopProxy.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="lock.h">
+      <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -153,7 +153,9 @@
   <ItemGroup>
     <ClCompile Include="ClientMessage.cpp" />
     <ClCompile Include="FrameworkThread.cpp" />
+    <ClCompile Include="lock_win.cpp" />
     <ClCompile Include="MessageLoop.cpp" />
+    <ClCompile Include="MessageLoopProxy.cpp" />
     <ClCompile Include="MessagePump.cpp" />
     <ClCompile Include="ProcessMessagePump.cpp" />
     <ClCompile Include="Thread.cpp" />
@@ -163,7 +165,9 @@
   <ItemGroup>
     <ClInclude Include="Callback.hpp" />
     <ClInclude Include="FrameworkThread.h" />
+    <ClInclude Include="lock.h" />
     <ClInclude Include="MessageLoop.h" />
+    <ClInclude Include="MessageLoopProxy.h" />
     <ClInclude Include="MessagePump.h" />
     <ClInclude Include="ProcessMessagePump.h" />
     <ClInclude Include="Thread.h" />
