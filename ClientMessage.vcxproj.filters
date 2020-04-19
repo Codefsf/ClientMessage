@@ -36,13 +36,16 @@
     <ClCompile Include="MessagePump.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ProcessMessagePump.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="MessageLoopProxy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="lock_win.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="default_message_pump.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="waitable_event_win.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,14 +71,26 @@
     <ClInclude Include="MessagePump.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ProcessMessagePump.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="MessageLoopProxy.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="lock.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="default_message_pump.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="waitable_event.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="base_config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="base_types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="port.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

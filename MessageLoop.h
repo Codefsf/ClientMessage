@@ -9,41 +9,53 @@
 
 class MessagePump;
 
-struct PendingTask
-{
-	PendingTask(const StdClosure &task);
-	~PendingTask();
-
-	bool operator<(const PendingTask& other) const;
-
-	bool nestable;
-
-	void Run()
-	{
-		if (std_task) {
-			std_task();
-		}
-		else {
-			assert(false);
-		}
-	}
-
-private:
-	StdClosure std_task;
-};
-
-class TaskQueue : public std::queue<PendingTask>
-{
-public:
-	void Swap(TaskQueue* queue)
-	{
-		c.swap(queue->c);  // 常数时间复杂度的内存交换
-	}
-};
-
 class MessageLoop
 {
 public:
+	struct PendingTask
+	{
+		PendingTask(const StdClosure &task);
+		~PendingTask();
+
+		void Run()
+		{
+			if (std_task) {
+				std_task();
+			}
+			else {
+				assert(false);
+			}
+		}
+
+	private:
+		StdClosure std_task;
+	};
+
+	class TaskQueue : public std::queue<PendingTask>
+	{
+	public:
+		void Swap(TaskQueue* queue)
+		{
+			c.swap(queue->c);  // 常数时间复杂度的内存交换
+		}
+	};
+
+	struct RunState
+	{
+		int run_depth;
+		bool quit_received;
+	};
+
+	class AutoRunState : RunState
+	{
+	public:
+		explicit AutoRunState(MessageLoop* loop);
+		~AutoRunState();
+	private:
+		MessageLoop* loop_;
+		RunState* previous_state_;
+	};
+
 	explicit MessageLoop();
 	virtual ~MessageLoop();
 	static MessageLoop* current();
@@ -82,6 +94,8 @@ public:
 	NLock incoming_queue_lock_;
 
 	TaskQueue work_queue_;
+
+	RunState *state_;
 
 	std::shared_ptr<MessageLoopProxy> message_loop_proxy_;
 };

@@ -152,27 +152,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ClientMessage.cpp" />
+    <ClCompile Include="default_message_pump.cpp" />
     <ClCompile Include="FrameworkThread.cpp" />
     <ClCompile Include="lock_win.cpp" />
     <ClCompile Include="MessageLoop.cpp" />
     <ClCompile Include="MessageLoopProxy.cpp" />
     <ClCompile Include="MessagePump.cpp" />
-    <ClCompile Include="ProcessMessagePump.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ThreadLocal.cpp" />
     <ClCompile Include="ThreadManage.cpp" />
+    <ClCompile Include="waitable_event_win.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="base_config.h" />
+    <ClInclude Include="base_types.h" />
     <ClInclude Include="Callback.hpp" />
+    <ClInclude Include="default_message_pump.h" />
     <ClInclude Include="FrameworkThread.h" />
     <ClInclude Include="lock.h" />
     <ClInclude Include="MessageLoop.h" />
     <ClInclude Include="MessageLoopProxy.h" />
     <ClInclude Include="MessagePump.h" />
-    <ClInclude Include="ProcessMessagePump.h" />
+    <ClInclude Include="port.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ThreadLocal.h" />
     <ClInclude Include="ThreadManage.h" />
+    <ClInclude Include="waitable_event.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

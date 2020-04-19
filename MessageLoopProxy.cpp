@@ -23,9 +23,20 @@ MessageLoopProxy::~MessageLoopProxy()
 
 }
 
+void MessageLoopProxy::OnDestruct() const
+{
+	delete this;
+}
+
 void MessageLoopProxy::PostTask(const StdClosure &task) 
 {
 	NAutoLock lock(&message_loop_lock_);
 
 	target_message_loop_->PostTask(task);
+}
+
+void MessageLoopProxy::WillDestroyCurrentMessageLoop()
+{
+	NAutoLock lock(&message_loop_lock_);
+	target_message_loop_ = nullptr;
 }
