@@ -1,6 +1,8 @@
 #pragma once
 #include "lock.h"
+#include "Callback.hpp"
 
+class MessageLoop;
 class MessageLoopProxy : public SupportWeakCallback
 {
 public:

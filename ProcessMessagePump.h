@@ -36,8 +36,6 @@ protected:
 		Dispatcher* dispatcher;		// 消息派发器
 	};
 
-	// 取当前定时间隔
-	int64_t GetCurrentDelay() const;
 	virtual void DoRunLoop() = 0;
 
 	// 定时任务下次运行的时间

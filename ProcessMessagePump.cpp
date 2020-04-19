@@ -27,19 +27,3 @@ void ProcessMessagePump::Quit()
 	if (state_)
 		state_->should_quit = true;
 }
-
-int64_t ProcessMessagePump::GetCurrentDelay() const
-{
-	if (delayed_work_time_.is_null())
-		return -1;
-
-	// 将微妙的精度转换为毫秒
-	double timeout = ceil((delayed_work_time_ - TimeTicks::Now()).ToInternalValue() / 1000.0);
-
-	// 如果delay的值是负的，那么表示任务需要被越快运行越好
-	int64_t delay = static_cast<int64_t>(timeout);
-	if (delay < 0)
-		delay = 0;
-
-	return delay;
-}
