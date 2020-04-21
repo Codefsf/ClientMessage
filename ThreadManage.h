@@ -2,6 +2,7 @@
 #include <memory>
 #include <map>
 #include "Callback.hpp"
+#include "lock.h"
 
 #define SINGLETON_DEFINE(TypeName)				\
 static TypeName* GetInstance()					\
@@ -28,7 +29,7 @@ public:
 
 private:
 	ThreadMap() { }
-	//NLock lock_;
+	NLock lock_;
 	std::map<int, FrameworkThread*> threads_;
 };
 
