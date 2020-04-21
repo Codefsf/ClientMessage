@@ -38,6 +38,8 @@ public:
 
 	virtual ~FrameworkThread();
 
+	void RunWithLoop();
+
 	bool Start();
 
 	bool StartWithLoop();

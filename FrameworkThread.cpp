@@ -19,6 +19,10 @@ FrameworkThread::~FrameworkThread()
 	Stop();
 }
 
+void FrameworkThread::RunWithLoop() {
+	Run();
+}
+
 bool FrameworkThread::Start()
 {
 	return StartWithLoop();
