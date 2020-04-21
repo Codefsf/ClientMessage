@@ -147,7 +147,7 @@ typedef std::function<void(void)> StdClosure;
 	{
 		std::weak_ptr<WeakFlag> weak_flag = ((SupportWeakCallback*)p)->GetWeakFlag();
 		auto bind_obj = std::bind(f, p, args...);
-		static_assert(std::is_base_of<nbase::SupportWeakCallback, C>::value, "nbase::SupportWeakCallback should be base of C");
+		static_assert(std::is_base_of<SupportWeakCallback, C>::value, "nbase::SupportWeakCallback should be base of C");
 		WeakCallback<decltype(bind_obj)> weak_callback(weak_flag, std::move(bind_obj));
 		return weak_callback;
 	}
