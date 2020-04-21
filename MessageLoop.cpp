@@ -109,8 +109,8 @@ void MessageLoop::AddToIncomingQueue(const PendingTask &task)
 bool MessageLoop::DoWork()
 {
 	// 任务当前是否允许被执行
-	if (!nestable_tasks_allowed_)
-		return false;
+	//if (!nestable_tasks_allowed_)
+	//	return false;
 
 	for (;;)
 	{
@@ -124,19 +124,8 @@ bool MessageLoop::DoWork()
 		{
 			PendingTask task = work_queue_.front();
 			work_queue_.pop();
-			if (!task.delayed_run_time.is_null())
-			{
-				// 加入到定时任务队列
-				AddToDelayedWorkQueue(task);
-				// 如果加入的新任务是将被最先执行的，那么需要重新调度
-				if (delayed_work_queue_.top().sequence_num == task.sequence_num)
-					pump_->ScheduleDelayedWork(task.delayed_run_time);
-			}
-			else
-			{
-				if (DeferOrRunPendingTask(task))
-					return true;
-			}
+
+			RunTask(task);
 		} while (!work_queue_.empty());
 	}
 
@@ -170,32 +159,10 @@ void MessageLoop::ReloadWorkQueue()
 	}
 }
 
-bool MessageLoop::DeferOrRunPendingTask(const PendingTask &task)
-{
-	// 任务符合立即执行的条件，那么执行之
-	if (task.nestable || state_->run_depth == 1)
-	{
-		RunTask(task);
-		return true;
-	}
-	// 不可嵌套任务，需要缓存之直到在最顶层MessageLoop中执行
-	deferred_non_nestable_work_queue_.push(task);
-	return false;
-}
-
 void MessageLoop::RunTask(const PendingTask &task)
 {
-	assert(nestable_tasks_allowed_);
-
-	// 考虑到最坏情况下，任务可能是不可重入的，
-	// 所以暂时禁用嵌套任务
-
-	nestable_tasks_allowed_ = false;
 	PendingTask pending_task = task;
-	PreProcessTask();
 	pending_task.Run();
-	PostPrecessTask();
-	nestable_tasks_allowed_ = true;
 }
 
 bool MessageLoop::DeletePendingTasks()
@@ -205,26 +172,13 @@ bool MessageLoop::DeletePendingTasks()
 	{
 		PendingTask task = work_queue_.front();
 		work_queue_.pop();
-		if (!task.delayed_run_time.is_null())
-			AddToDelayedWorkQueue(task);
 	}
 
-	while (!deferred_non_nestable_work_queue_.empty())
-		deferred_non_nestable_work_queue_.pop();
-
-	has_work = !delayed_work_queue_.empty();
-	while (!delayed_work_queue_.empty())
-		delayed_work_queue_.pop();
-
-	return has_work;
+	return true;
 }
 
-
-
-
-
-
 //----------------------------------------------------------------
+
 MessageLoop::AutoRunState::AutoRunState(MessageLoop* loop) :
 	loop_(loop)
 {

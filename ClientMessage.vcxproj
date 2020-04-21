@@ -151,7 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ClientMessage.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="default_message_pump.cpp" />
     <ClCompile Include="FrameworkThread.cpp" />
     <ClCompile Include="lock_win.cpp" />

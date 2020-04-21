@@ -6,10 +6,11 @@
 
 #include "Callback.hpp"
 #include "MessageLoopProxy.h"
+#include "MessagePump.h"
 
 class MessagePump;
 
-class MessageLoop
+class MessageLoop : public MessagePump::Delegate
 {
 public:
 	struct PendingTask
@@ -84,7 +85,6 @@ public:
 	virtual void AddToIncomingQueue(const PendingTask &task);
 
 	void ReloadWorkQueue();
-	bool DeferOrRunPendingTask(const PendingTask &task);
 	void RunTask(const PendingTask &task);
 	bool DeletePendingTasks();
 
