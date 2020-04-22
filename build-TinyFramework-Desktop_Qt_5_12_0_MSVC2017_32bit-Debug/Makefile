@@ -266,6 +266,7 @@ Makefile: ..\TinyFramework.pro D:\Qt\Qt5.12.0\5.12.0\msvc2017\mkspecs\win32-msvc
 		..\TinyFramework.pro \
 		D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\Qt5Widgets.prl \
 		D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\Qt5Gui.prl \
+		D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\Qt5Network.prl \
 		D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\Qt5Core.prl \
 		D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\qtmaind.prl
 	$(QMAKE) -o Makefile ..\TinyFramework.pro -spec win32-msvc "CONFIG+=debug" "CONFIG+=qml_debug"
@@ -460,6 +461,7 @@ D:\Qt\Qt5.12.0\5.12.0\msvc2017\mkspecs\features\lex.prf:
 ..\TinyFramework.pro:
 D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\Qt5Widgets.prl:
 D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\Qt5Gui.prl:
+D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\Qt5Network.prl:
 D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\Qt5Core.prl:
 D:\Qt\Qt5.12.0\5.12.0\msvc2017\lib\qtmaind.prl:
 qmake: FORCE

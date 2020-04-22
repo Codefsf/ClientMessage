@@ -3,14 +3,34 @@
 #include "ThreadManage.h"
 
 #include <iostream>
+#include <functional>
+#include <thread>
+#include <QPainter>
+#include <QBrush>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QDebug>
+#include <QEventLoop>
 
 using namespace std;
+
+static int g_count = 0;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    m_model = new MainWindowModel;
+
+    connect(m_model, &MainWindowModel::dataChanged,
+            this, &MainWindow::callback);
+    connect(&m_timer, &QTimer::timeout,
+            this, &MainWindow::on_pushButton_clicked);
+
+    m_timer.start(1000);
+
 }
 
 MainWindow::~MainWindow()
@@ -18,13 +38,60 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::paintEvent(QPaintEvent *event)
 {
-    auto clu = Bind(&MainWindow::callback, this, 55);
-    ThreadManager::PostTask(1, clu);
+//    QPainter painter(this);
+//    QBrush brush(Qt::yellow);
+//    QBrush brush1(Qt::red);
+//    if (g_count == 0) {
+//        painter.setBrush(brush);
+//    } else {
+//        painter.setBrush(brush1);
+//    }
+//    painter.drawRect(this->rect());
 }
 
-void MainWindow::callback(int count)
+void MainWindow::on_pushButton_clicked()
 {
-    cout << "--------------" << count << endl;;
+    m_model->call();
+}
+
+void MainWindow::callback(const QString &str)
+{
+    cout << "Thread" << this_thread::get_id() << endl;;
+    ui->label_2->text().isEmpty() ?
+                ui->label_2->setText(str) :
+                ui->label_2->clear();
+}
+
+void MainWindowModel::call()
+{
+        cout << "------------------11" << endl;
+        ThreadManager::PostTask(1, Bind(&MainWindowModel::callBack, this));
+
+}
+
+
+
+void MainWindowModel::callBack()
+{
+    qDebug() << __func__;
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager();
+    connect(manager, &QNetworkAccessManager::finished,
+            [=](QNetworkReply* re){
+        cout << "Thread callback" << this_thread::get_id() << endl;;
+
+        emit dataChanged(re->readAll());
+    });
+
+
+    manager->get(QNetworkRequest(QUrl("http://www.sina.com")));
+}
+
+void MainWindowModel::netReply(QNetworkReply *reply)
+{
+    cout << "--------------reply" << this_thread::get_id() << endl;
+        QByteArray arr = reply->readAll();
+        qDebug() << arr;
 }

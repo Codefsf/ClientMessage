@@ -114,16 +114,14 @@ bool MessageLoop::DoWork()
 
 	for (;;)
 	{
-		// 先从incoming队列取任务
 		ReloadWorkQueue();
 		if (work_queue_.empty())
 			break;
 
-		// 一次性处理work队列中的所有任务
 		do
 		{
 			PendingTask task = work_queue_.front();
-			work_queue_.pop();
+            work_queue_.pop();
 
 			RunTask(task);
 		} while (!work_queue_.empty());

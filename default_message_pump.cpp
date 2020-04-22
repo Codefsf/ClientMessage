@@ -7,6 +7,7 @@
 
 #include "default_message_pump.h"
 #include <cassert>
+#include <QEventLoop>
 
 DefaultMessagePump::DefaultMessagePump() :
 	event_(false, false),
@@ -17,7 +18,6 @@ DefaultMessagePump::DefaultMessagePump() :
 
 void DefaultMessagePump::Run(Delegate* delegate)
 {
-	// Quit must have been called outside of Run!
 	assert(should_quit_ == false);
 
 	for (;;)
@@ -25,10 +25,6 @@ void DefaultMessagePump::Run(Delegate* delegate)
 		bool did_work = delegate->DoWork();
 		if (should_quit_)
 			break;
-
-		/*did_work |= delegate->DoDelayedWork(&delayed_work_time_);
-		if (should_quit_)
-			break;*/
 
 		if (did_work)
 			continue;
@@ -40,22 +36,7 @@ void DefaultMessagePump::Run(Delegate* delegate)
 		if (did_work)
 			continue;
 
-		/*if (delayed_work_time_.is_null())
-		{
-			Wait();
-		}
-		else
-		{
-			TimeDelta delay = delayed_work_time_ - TimeTicks::Now();
-			if (delay > TimeDelta())
-				WaitTimeout(delay);
-			else
-			{
-				// It looks like delayed_work_time_ indicates a time in the past, so we
-				// need to call DoDelayedWork now.
-				delayed_work_time_ = TimeTicks();
-			}
-		}*/
+        Wait();
 	}
 
 	should_quit_ = false;
@@ -73,26 +54,15 @@ void DefaultMessagePump::ScheduleWork()
 	Wakeup();
 }
 
-/*void DefaultMessagePump::ScheduleDelayedWork(const TimeTicks& delayed_work_time)
-{
-	// We know that we can't be blocked on Wait right now since this method can
-	// only be called on the same thread as Run, so we only need to update our
-	// record of how long to sleep when we do sleep.
-	delayed_work_time_ = delayed_work_time;
-}*/
-
 void DefaultMessagePump::Wait()
 {
-	event_.Wait();
+    //event_.Wait();
+    m_loop.exec();
 }
-
-/*void DefaultMessagePump::WaitTimeout(const TimeDelta &timeout)
-{
-	event_.WaitTimeout(timeout);
-}*/
 
 void DefaultMessagePump::Wakeup()
 {
-	event_.Signal();
+    //event_.Signal();
+    m_loop.exit();
 }
 

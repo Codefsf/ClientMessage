@@ -5,6 +5,7 @@
 
 #include "MessagePump.h"
 #include "waitable_event.h"
+#include <QEventLoop>
 
 class DefaultMessagePump : public MessagePump
 {
@@ -25,6 +26,7 @@ private:
 
 	WaitableEvent event_;
 	bool should_quit_;
+    QEventLoop m_loop;
 	//TimeTicks delayed_work_time_;
 };
 
