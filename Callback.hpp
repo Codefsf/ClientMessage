@@ -128,18 +128,6 @@ typedef std::function<void(void)> StdClosure;
 		return std::bind(f, args...);
 	}
 
-	// const class member function 
-	template<class R, class C, class... DArgs, class P, class... Args>
-	auto Bind(R(C::*f)(DArgs...) const, P && p, Args && ... args)
-		->WeakCallback<decltype(std::bind(f, p, args...))>
-	{
-		std::weak_ptr<WeakFlag> weak_flag = ((SupportWeakCallback*)p)->GetWeakFlag();
-		auto bind_obj = std::bind(f, p, args...);
-		static_assert(std::is_base_of<nbase::SupportWeakCallback, C>::value, "nbase::SupportWeakCallback should be base of C");
-		WeakCallback<decltype(bind_obj)> weak_callback(weak_flag, std::move(bind_obj));
-		return weak_callback;
-	}
-
 	// non-const class member function 
 	template<class R, class C, class... DArgs, class P, class... Args>
 	auto Bind(R(C::*f)(DArgs...), P && p, Args && ... args)

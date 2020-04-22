@@ -24,6 +24,21 @@ public:
 	}
 };
 
+class Callback : public virtual SupportWeakCallback {
+public:
+	Callback() {}
+	~Callback() {
+		cout << "---------------------decall" << endl;
+	}
+
+	void Test(int count) {
+		cout << "Thread id:" << this_thread::get_id() << " " << this << endl;
+
+
+		cout << "Test" << count << endl;
+	}
+};
+
 class MainThread : public FrameworkThread, public virtual SupportWeakCallback {
 public:
 	MainThread() : FrameworkThread(" ") {
@@ -38,15 +53,26 @@ public:
 		ThreadManager::UnregisterThread();
 	}
 
-	void start() {
-		StdClosure closure = []() {
-			cout << "Test" << endl;
-		};
+	void Test(int count) {
 
+		cout << "Test" << endl;
+	}
+
+	void start() {
+		int num = 0;
+		Callback* call = new Callback;
+		auto clu = Bind(&Callback::Test, call, 55);
 		while (true) {
-			ThreadManager::PostTask(1, ToWeakCallback(closure));
+			ThreadManager::PostTask(1, clu);
 
 			std::this_thread::sleep_for(1s);
+
+			num++;
+
+			if (num == 5 && call != nullptr) {
+				delete call;
+				call = nullptr;
+			}
 		}
 	}
 };
@@ -55,6 +81,8 @@ using namespace std;
 
 int main()
 {
+	cout << "Main thread id:" << this_thread::get_id() << endl;
+
 	MainThread uit;
 	uit.Init();
 
