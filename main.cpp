@@ -8,6 +8,9 @@
 #include "ThreadManage.h"
 #include "Callback.hpp"
 
+#include "mainwindow.h"
+#include <QApplication>
+
 using namespace std;
 
 class NetworkThread : public FrameworkThread {
@@ -79,16 +82,18 @@ public:
 
 using namespace std;
 
-int main()
+int main(int argc, char *argv[])
 {
 	cout << "Main thread id:" << this_thread::get_id() << endl;
 
-	MainThread uit;
-	uit.Init();
+    QApplication app(argc, argv);
 
 	NetworkThread net;
 	net.Start();
 
-	uit.start();
+    MainWindow win;
+    win.show();
+
+    app.exec();
 }
 
