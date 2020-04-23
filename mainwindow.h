@@ -39,9 +39,6 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-protected:
-    void paintEvent(QPaintEvent *event);
-
 private slots:
     void on_pushButton_clicked();
     void callback(const QString &str);

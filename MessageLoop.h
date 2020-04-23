@@ -4,58 +4,64 @@
 #include <memory>
 #include <assert.h>
 
+#include "lock.h"
 #include "Callback.hpp"
-#include "MessageLoopProxy.h"
 #include "MessagePump.h"
+
+#include <QEventLoop>
+#include <QObject>
 
 class MessagePump;
 
-class MessageLoop : public MessagePump::Delegate
+struct PendingTask
+{
+    PendingTask(const StdClosure &task);
+    ~PendingTask();
+
+    void Run()
+    {
+        if (std_task) {
+            std_task();
+        }
+        else {
+            assert(false);
+        }
+    }
+
+private:
+    StdClosure std_task;
+};
+
+class TaskQueue : public std::queue<PendingTask>
 {
 public:
-	struct PendingTask
-	{
-		PendingTask(const StdClosure &task);
-		~PendingTask();
+    void Swap(TaskQueue* queue)
+    {
+        c.swap(queue->c);  // 常数时间复杂度的内存交换
+    }
+};
 
-		void Run()
-		{
-			if (std_task) {
-				std_task();
-			}
-			else {
-				assert(false);
-			}
-		}
+struct RunState
+{
+    int run_depth;
+    bool quit_received;
+};
 
-	private:
-		StdClosure std_task;
-	};
+//class AutoRunState : RunState
+//{
+//public:
+//    explicit AutoRunState(MessageLoop* loop);
+//    ~AutoRunState();
+//private:
+//    MessageLoop* loop_;
+//    RunState* previous_state_;
+//};
 
-	class TaskQueue : public std::queue<PendingTask>
-	{
-	public:
-		void Swap(TaskQueue* queue)
-		{
-			c.swap(queue->c);  // 常数时间复杂度的内存交换
-		}
-	};
+class MessageLoop : public QObject
+{
+    Q_OBJECT
 
-	struct RunState
-	{
-		int run_depth;
-		bool quit_received;
-	};
-
-	class AutoRunState : RunState
-	{
-	public:
-		explicit AutoRunState(MessageLoop* loop);
-		~AutoRunState();
-	private:
-		MessageLoop* loop_;
-		RunState* previous_state_;
-	};
+public:
 
 	explicit MessageLoop();
 	virtual ~MessageLoop();
@@ -71,11 +77,7 @@ public:
 
 	void PostTask(const StdClosure &task);
 
-	std::shared_ptr<MessageLoopProxy> message_loop_proxy() {
-		return message_loop_proxy_;
-	}
-
-	typedef std::priority_queue<PendingTask> DelayedTaskQueue;
+    typedef std::priority_queue<PendingTask> DelayedTaskQueue;
 
 	virtual bool DoWork();
 	virtual bool DoIdleWork();
@@ -88,6 +90,15 @@ public:
 	void RunTask(const PendingTask &task);
 	bool DeletePendingTasks();
 
+signals:
+    void scheduleWork();
+
+public slots:
+    void doWork();
+
+private:
+    std::unique_ptr<QEventLoop> m_eventLoop;
+
 	std::shared_ptr<MessagePump> pump_;
 
 	TaskQueue incoming_queue_;
@@ -96,7 +107,5 @@ public:
 	TaskQueue work_queue_;
 
 	RunState *state_;
-
-	std::shared_ptr<MessageLoopProxy> message_loop_proxy_;
 };
 

@@ -27,13 +27,11 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    default_message_pump.cpp \
     FrameworkThread.cpp \
     lock_win.cpp \
     main.cpp \
     mainwindow.cpp \
     MessageLoop.cpp \
-    MessageLoopProxy.cpp \
     MessagePump.cpp \
     Thread.cpp \
     ThreadLocal.cpp \
@@ -45,12 +43,10 @@ HEADERS += \
     base_config.h \
     base_types.h \
     Callback.hpp \
-    default_message_pump.h \
     FrameworkThread.h \
     lock.h \
     mainwindow.h \
     MessageLoop.h \
-    MessageLoopProxy.h \
     MessagePump.h \
     port.h \
     Thread.h \

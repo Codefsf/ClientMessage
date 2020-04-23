@@ -7,7 +7,7 @@ ThreadLocalPointer<FrameworkThreadTlsData> *tlsData = new ThreadLocalPointer<Fra
 FrameworkThread::FrameworkThread(const char* name)
 	: started_(false),
 	stopping_(false),
-	message_loop_(NULL),
+	m_messageLoop(nullptr),
 	event_(false, false),
 	name_(name)
 {
@@ -30,7 +30,7 @@ bool FrameworkThread::Start()
 
 bool FrameworkThread::StartWithLoop()
 {
-	if (message_loop_ != NULL)
+	if (m_messageLoop != nullptr)
 		return false;
 
 	if (Create() == false)
@@ -57,11 +57,11 @@ void FrameworkThread::Stop()
 
 void FrameworkThread::StopSoon()
 {
-	if (stopping_ || !message_loop_)
+	if (stopping_ || !m_messageLoop)
 		return;
 
 	stopping_ = true;
-	message_loop_->PostTask(
+	m_messageLoop->PostTask(
 		Bind(&FrameworkThread::DoStopSoon, this));
 }
 
@@ -79,27 +79,23 @@ void FrameworkThread::Run()
 		ThreadId thread_id = Thread::CurrentId();
 		set_thread_id(thread_id);
 
-		message_loop_ = new MessageLoop;
+		m_messageLoop = std::make_shared<MessageLoop>();
 
-		// Let the thread do extra initialization.
-		// Let's do this before signaling we are started.
 		Init();
 
 		event_.Signal();
 
-		message_loop_->Run();
+		m_messageLoop->Run();
 
 		Cleanup();
-
-		delete message_loop_;
 		
-		message_loop_ = nullptr;
+		//m_messageLoop.reset(nullptr);
 	}
 
 	set_thread_id(invalidThreadId);
 	{
 		FrameworkThreadTlsData *tls = GetTlsData();
-		if (tls != NULL)
+        if (tls != nullptr)
 		{
 		}
 	}
@@ -109,24 +105,25 @@ void FrameworkThread::Run()
 void FrameworkThread::InitTlsData(FrameworkThread *self)
 {
 	FrameworkThreadTlsData *tls = GetTlsData();
-	//DCHECK(tls == NULL);
-	if (tls != NULL)
+    if (tls != nullptr)
 		return;
+
 	tls = new FrameworkThreadTlsData;
 	tls->self = self;
 	tls->managed = 0;
 	tls->managed_thread_id = -1;
 	tls->quit_properly = false;
-	tls->custom_data = NULL;
+    tls->custom_data = nullptr;
 	tlsData->Set(tls);
 }
 
 void FrameworkThread::FreeTlsData()
 {
 	FrameworkThreadTlsData *tls = GetTlsData();
-	if (tls == NULL)
+    if (tls == nullptr)
 		return;
-	tlsData->Set(NULL);
+
+    tlsData->Set(nullptr);
 	delete tls;
 }
 
@@ -138,43 +135,44 @@ FrameworkThreadTlsData* FrameworkThread::GetTlsData()
 void FrameworkThread::SetThreadWasQuitProperly(bool flag)
 {
 	FrameworkThreadTlsData *tls = GetTlsData();
-	if (tls == NULL)
+    if (tls == nullptr)
 		return;
+
 	tls->quit_properly = flag;
 }
 
 FrameworkThread* FrameworkThread::current()
 {
 	FrameworkThreadTlsData *tls = GetTlsData();
-	//DCHECK(tls != NULL);
-	if (tls == NULL)
-		return NULL;
+    if (tls == nullptr)
+        return nullptr;
+
 	return tls->self;
 }
 
 int FrameworkThread::GetManagedThreadId()
 {
 	FrameworkThreadTlsData *tls = GetTlsData();
-	//DCHECK(tls != NULL);
-	if (tls == NULL)
+    if (tls == nullptr)
 		return -1;
+
 	return tls->managed_thread_id;
 }
 
 void* FrameworkThread::GetCustomTlsData()
 {
 	FrameworkThreadTlsData *tls = GetTlsData();
-	//DCHECK(tls != NULL);
-	if (tls == NULL)
-		return NULL;
+    if (tls == nullptr)
+        return nullptr;
+
 	return tls->custom_data;
 }
 
 void FrameworkThread::SetCustomTlsData(void *data)
 {
 	FrameworkThreadTlsData *tls = GetTlsData();
-	//DCHECK(tls != NULL);
-	if (tls == NULL)
+    if (tls == nullptr)
 		return;
+
 	tls->custom_data = data;
 }

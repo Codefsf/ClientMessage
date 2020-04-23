@@ -92,15 +92,13 @@ int ThreadMap::QueryThreadId(const FrameworkThread *thread)
 	return -1;
 }
 
-std::shared_ptr<MessageLoopProxy> ThreadMap::GetMessageLoop(int identifier) const
+std::shared_ptr<MessageLoop> ThreadMap::GetMessageLoop(int identifier) const
 {
 	FrameworkThread *thread = QueryThreadInternal(identifier);
-	if (thread == NULL)
-		return NULL;
-	MessageLoop *message_loop = thread->message_loop();
-	if (message_loop == NULL)
-		return NULL;
-	return message_loop->message_loop_proxy();
+	if (thread == nullptr)
+		return nullptr;
+
+    return thread->message_loop();
 }
 
 //---------------------------------------------------------------------
@@ -139,10 +137,11 @@ bool ThreadManager::PostTask(const StdClosure &task)
 
 bool ThreadManager::PostTask(int identifier, const StdClosure &task)
 {
-	std::shared_ptr<MessageLoopProxy> message_loop =
+    std::shared_ptr<MessageLoop> message_loop =
 		ThreadMap::GetInstance()->GetMessageLoop(identifier);
-	if (message_loop == NULL)
+    if (message_loop == nullptr)
 		return false;
+
 	message_loop->PostTask(task);
 	return true;
 }

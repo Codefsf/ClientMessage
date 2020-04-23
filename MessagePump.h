@@ -1,4 +1,5 @@
 #pragma once
+#include <QObject>
 
 // MessagePump用于驱动各种类型的消息循环，比如UI消息、IO消息等，因此可以派生为UIMessagePump、IOMessagePump等等。
 //
@@ -11,6 +12,14 @@
 // 如果新的消息到达或者有新的即时、定时任务被处理，那么立即切换成任务状态；如果空闲状态下没有新的空闲任务需要处理，那么
 // 便进入睡眠状态。处于睡眠状态的MessagePump可以被ScheduleWork、ScheduleDelayedWork等唤醒进入任务状态。
 
+class Delegate
+{
+public:
+    virtual ~Delegate() {}
+    virtual bool DoWork() = 0;
+    virtual bool DoIdleWork() = 0;
+};
+
 class MessagePump
 {
 public:
@@ -20,13 +29,6 @@ public:
 	//   DoDelayedWork用来处理定时任务，这类任务在特定时刻被处理，next_delayed_message_time为下个任务执行的时刻
 	//   DoIdleWork用来处理闲时任务，这类任务在MessagePump处于空闲状态时被处理
 	// 三者返回值意义类似，返回true表示处理了该类任务，返回false表示没有该类任务需要处理
-	class Delegate
-	{
-	public:
-		virtual ~Delegate() {}
-		virtual bool DoWork() = 0;
-		virtual bool DoIdleWork() = 0;
-	};
 
 	MessagePump();
 	virtual ~MessagePump();

@@ -14,8 +14,6 @@
 
 using namespace std;
 
-static int g_count = 0;
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -28,27 +26,11 @@ MainWindow::MainWindow(QWidget *parent) :
             this, &MainWindow::callback);
     connect(&m_timer, &QTimer::timeout,
             this, &MainWindow::on_pushButton_clicked);
-
-    m_timer.start(1000);
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::paintEvent(QPaintEvent *event)
-{
-//    QPainter painter(this);
-//    QBrush brush(Qt::yellow);
-//    QBrush brush1(Qt::red);
-//    if (g_count == 0) {
-//        painter.setBrush(brush);
-//    } else {
-//        painter.setBrush(brush1);
-//    }
-//    painter.drawRect(this->rect());
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -66,17 +48,11 @@ void MainWindow::callback(const QString &str)
 
 void MainWindowModel::call()
 {
-        cout << "------------------11" << endl;
-        ThreadManager::PostTask(1, Bind(&MainWindowModel::callBack, this));
-
+    ThreadManager::PostTask(1, Bind(&MainWindowModel::callBack, this));
 }
-
-
 
 void MainWindowModel::callBack()
 {
-    qDebug() << __func__;
-
     QNetworkAccessManager *manager = new QNetworkAccessManager();
     connect(manager, &QNetworkAccessManager::finished,
             [=](QNetworkReply* re){

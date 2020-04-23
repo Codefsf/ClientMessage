@@ -4,6 +4,8 @@
 #include "MessageLoop.h"
 #include "waitable_event.h"
 
+#include <memory>
+
 class FrameworkThread;
 class Dispatcher;
 
@@ -48,7 +50,7 @@ public:
 
 	void StopSoon();
 
-	MessageLoop* message_loop() const { return message_loop_; }
+	std::shared_ptr<MessageLoop> message_loop() const { return m_messageLoop; }
 
 	const std::string &thread_name() { return name_; }
 
@@ -80,8 +82,9 @@ protected:
 	static void SetThreadWasQuitProperly(bool flag);
 
 	void set_message_loop(MessageLoop* message_loop)
-	{
-		message_loop_ = message_loop;
+	{	
+		if (message_loop)
+			m_messageLoop.reset(message_loop);
 	}
 
 private:
@@ -93,7 +96,7 @@ private:
 
 	bool stopping_;
 
-	MessageLoop *message_loop_;
+	std::shared_ptr<MessageLoop> m_messageLoop;
 	std::shared_ptr<CustomMessageLoopFactory> factory_;
 
 	WaitableEvent event_;

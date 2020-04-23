@@ -24,7 +24,7 @@ public:
 	bool RegisterThread(int self_identifier);
 	bool UnregisterThread();
 	int QueryThreadId(const FrameworkThread *thread);
-	std::shared_ptr<MessageLoopProxy> GetMessageLoop(int identifier) const;
+    std::shared_ptr<MessageLoop> GetMessageLoop(int identifier) const;
 	FrameworkThread* QueryThreadInternal(int identifier) const;
 
 private:
